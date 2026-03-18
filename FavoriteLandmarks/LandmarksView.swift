@@ -10,7 +10,7 @@ import MapKit
 import CoreLocation
 
 struct LandmarksView: View {
-    private let initialCameraPosition: MapCameraPosition = .region(MKCoordinateRegion(
+    @State private var mapCameraPosition: MapCameraPosition = .region(MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 28.61, longitude: 77.21),
         span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
     ))
@@ -20,10 +20,10 @@ struct LandmarksView: View {
     @State private var pinLocations: [PinLocation] = []
     
     var body: some View {
-        Map(initialPosition: initialCameraPosition) {
-            ForEach(pinLocations) { pinLocation in
-                if let coordinate = pinLocation.coordinate {
-                    Marker("", coordinate: coordinate)
+        Map(position: $mapCameraPosition) {
+            ForEach(pinLocations.indices, id: \.self) { pinLocationIndex in
+                if let coordinate = pinLocations[pinLocationIndex].coordinate {
+                    Marker("Pin \(pinLocationIndex + 1)", coordinate: coordinate)
                 }
             }
         }
@@ -35,7 +35,12 @@ struct LandmarksView: View {
         List {
             ForEach(pinLocations.indices, id: \.self) { pinLocationIndex in
                 if let coordinate = pinLocations[pinLocationIndex].coordinate {
-                    Text("Pin \(pinLocationIndex + 1): \(coordinate.latitude), \(coordinate.longitude)")
+                    Button("Pin \(pinLocationIndex + 1): \(coordinate.latitude), \(coordinate.longitude)") {
+                        mapCameraPosition = .region(MKCoordinateRegion(
+                            center: coordinate,
+                            span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+                        ))
+                    }
                 }
             }
         }
@@ -46,7 +51,6 @@ struct LandmarksView: View {
         } label: {
             Text("Pin Center Location")
                 .frame(maxWidth: .infinity)
-                
         }
         .padding(.horizontal)
         .buttonStyle(.borderedProminent)
