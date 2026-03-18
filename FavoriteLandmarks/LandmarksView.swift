@@ -10,6 +10,9 @@ import MapKit
 import CoreLocation
 
 struct LandmarksView: View {
+    
+    // MARK: - Properties
+    
     @State private var mapCameraPosition: MapCameraPosition = .region(MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 28.61, longitude: 77.21),
         span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
@@ -19,7 +22,9 @@ struct LandmarksView: View {
     
     @State private var pinLocations: [PinLocation] = []
     
-    var body: some View {
+    // MARK: - Map View
+    
+    var mapView: some View {
         Map(position: $mapCameraPosition) {
             ForEach(pinLocations.indices, id: \.self) { pinLocationIndex in
                 if let coordinate = pinLocations[pinLocationIndex].coordinate {
@@ -31,7 +36,11 @@ struct LandmarksView: View {
             centerCoordinate = context.region.center
         }
         .frame(height: 400)
-        
+    }
+    
+    // MARK: - Pinned Locations List View
+    
+    var pinnedLocationsView: some View {
         List {
             ForEach(pinLocations.indices, id: \.self) { pinLocationIndex in
                 if let coordinate = pinLocations[pinLocationIndex].coordinate {
@@ -45,7 +54,11 @@ struct LandmarksView: View {
             }
         }
         .listStyle(.plain)
-        
+    }
+    
+    // MARK: - Pin Location Button
+    
+    var pinLocationButton: some View {
         Button {
             pinLocations.append(PinLocation(coordinate: centerCoordinate))
         } label: {
@@ -54,6 +67,14 @@ struct LandmarksView: View {
         }
         .padding(.horizontal)
         .buttonStyle(.borderedProminent)
+    }
+    
+    // MARK: - Body View
+    
+    var body: some View {
+        mapView
+        pinnedLocationsView
+        pinLocationButton
     }
 }
 
