@@ -78,6 +78,8 @@ struct LandmarksView: View {
     }
 }
 
+// MARK: - Pin Location Model
+
 struct PinLocation: Identifiable {
     let id = UUID()
     var coordinate: CLLocationCoordinate2D?
