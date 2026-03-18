@@ -32,6 +32,15 @@ struct LandmarksView: View {
         }
         .frame(height: 400)
         
+        List {
+            ForEach(pinLocations.indices, id: \.self) { pinLocationIndex in
+                if let coordinate = pinLocations[pinLocationIndex].coordinate {
+                    Text("Pin \(pinLocationIndex + 1): \(coordinate.latitude), \(coordinate.longitude)")
+                }
+            }
+        }
+        .listStyle(.plain)
+        
         Button {
             pinLocations.append(PinLocation(coordinate: centerCoordinate))
         } label: {
@@ -41,14 +50,6 @@ struct LandmarksView: View {
         }
         .padding(.horizontal)
         .buttonStyle(.borderedProminent)
-        
-        List {
-            ForEach(pinLocations.indices, id: \.self) { pinLocationIndex in
-                if let coordinate = pinLocations[pinLocationIndex].coordinate {
-                    Text("Pin \(pinLocationIndex + 1): \(coordinate.latitude), \(coordinate.longitude)")
-                }
-            }
-        }
     }
 }
 
